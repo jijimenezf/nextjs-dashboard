@@ -156,3 +156,82 @@ export async function fetchInvoicesPages(query: string) {
         throw new Error('Failed to fetch total number of invoices.');
     }
 }
+
+export async function fetchCustomers() {
+    noStore()
+
+    try {
+        const { rows }: QueryResult<CustomerField> = await pool.query(`
+          SELECT id, name
+          FROM customers
+          ORDER BY name ASC`)
+
+        return rows
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch all customers.');
+    }
+}
+
+export async function insertInvoice({
+    customerId, amountInCents, status, created
+}: { customerId: string; amountInCents: number; status: string; created: string }) {
+    noStore()
+
+    try {
+        await pool.query(`INSERT INTO invoices(customer_id, amount, status, date)
+        VALUES ($1, $2, $3, $4)`, [customerId, amountInCents, status, created]);
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to insert a new invoice.');
+    }
+}
+
+export async function fetchInvoiceById(id: string) {
+    noStore()
+
+    try {
+        const { rows }: QueryResult<InvoiceForm> = await pool.query(`
+          SELECT
+            invoices.id,
+            invoices.customer_id,
+            invoices.amount,
+            invoices.status
+          FROM invoices
+          WHERE invoices.id = $1`, [id])
+        const invoices: InvoiceForm[] = rows.map((invoice) => ({
+            ...invoice,
+            amount: invoice.amount / 100,
+        }))
+        return invoices[0]
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch invoice.');
+    }
+}
+
+export async function updateInvoice({
+    id, customerId, amountInCents, status
+}: { id: string; customerId: string; amountInCents: number; status: string; }) {
+    noStore()
+
+    try {
+        await pool.query(`UPDATE invoices
+          SET customer_id = $1, amount = $2, status = $3
+          WHERE id = $4`, [customerId, amountInCents, status, id])
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to update the selected invoice.');
+    }
+}
+
+export async function deleteInvoice(id: string) {
+    noStore()
+
+    try {
+        await pool.query(`DELETE FROM invoices WHERE id = $1`, [id])
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to delete the selected invoice.');
+    }
+}

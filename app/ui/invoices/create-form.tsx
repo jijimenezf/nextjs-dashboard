@@ -10,14 +10,15 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createInvoice } from '@/app/lib/actions';
-import { useFormState } from 'react-dom';
+//import { useFormState } from 'react-dom';
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
   const initialState = { message: null, errors: {} };
-  const [state, dispatch] = useFormState(createInvoice, initialState);
+  //const [state, dispatch] = useFormState(createInvoice, initialState);
 
   return (
-    <form action={dispatch}>
+    <form action={createInvoice}>
+      {/** <form action={dispatch}> */}
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -44,7 +45,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
 
-          {state.errors?.customerId ? (
+          {/* state.errors?.customerId ? (
             <div
               id="customer-error"
               aria-live="polite"
@@ -54,7 +55,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 <p key={error}>{error}</p>
               ))}
             </div>
-          ) : null}
+              ) : null */}
         </div>
 
         {/* Invoice Amount */}
@@ -77,7 +78,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             </div>
           </div>
 
-          {state.errors?.amount ? (
+          {/* state.errors?.amount ? (
             <div
               id="amount-error"
               aria-live="polite"
@@ -87,7 +88,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 <p key={error}>{error}</p>
               ))}
             </div>
-          ) : null}
+              ) : null */}
         </div>
 
         {/* Invoice Status */}
@@ -129,7 +130,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               </div>
             </div>
           </div>
-          {state.errors?.status ? (
+          { /* state.errors?.status ? (
             <div
               aria-describedby="status-error"
               aria-live="polite"
@@ -139,14 +140,14 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 <p key={error}>{error}</p>
               ))}
             </div>
-          ) : null}
+              ) : null */}
         </div>
 
-        {state.message ? (
+        {/* state.message ? (
           <div aria-live="polite" className="my-2 text-sm text-red-500">
             <p>{state.message}</p>
           </div>
-        ) : null}
+        ) : null */}
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
