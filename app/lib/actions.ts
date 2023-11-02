@@ -3,6 +3,7 @@ import { z } from "zod";
 import { insertInvoice, updateInvoice, deleteInvoice } from "./data";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { signIn } from "@/auth";
 
 const InvoiceSchema =z.object({
     id: z.string(),
@@ -91,4 +92,18 @@ export async function upToDateInvoice(id: string, prevState: State, formData: Fo
 export async function removeInvoice(id: string) {
     await deleteInvoice(id)
     revalidatePath('/dashboard/invoices')
+}
+
+export async function authenticate(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    try {
+        await signIn('credentials', Object.fromEntries(formData));
+    } catch(err) {
+        if((err as Error).message.includes('CredentialsSignin')) {
+            return 'CredentialsSignin';
+        }
+        throw err;
+    }
 }

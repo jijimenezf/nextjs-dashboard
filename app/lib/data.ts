@@ -237,3 +237,17 @@ export async function deleteInvoice(id: string) {
         throw new Error('Failed to delete the selected invoice.');
     }
 }
+
+export async function getUser(email: string) {
+    noStore()
+    try {
+        const { rows }: QueryResult<User> = await pool.query(`SELECT * FROM users WHERE email = $1`, [email])
+        if (rows.length > 0) {
+            return rows[0];
+        }
+        return undefined;
+    } catch (error) {
+        console.error('Failed to fetch user:', error);
+        throw new Error('Failed to fetch user.');
+    }
+}
