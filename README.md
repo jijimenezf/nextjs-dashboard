@@ -35,6 +35,7 @@ This project is not using the Postgress SDK provided by Vercel (@vercel/postgres
 ## Next Steps
 
 - Add Docker configuration for this project
+- Add Customers page/layout funcionality
 - Add unit tests
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
