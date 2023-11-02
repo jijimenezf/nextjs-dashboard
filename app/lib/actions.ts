@@ -16,7 +16,7 @@ const CreateInvoice = InvoiceSchema.omit({ id: true, date: true });
 const UpdateInvoice = InvoiceSchema.omit({ date: true });
 
 export async function createInvoice(formData: FormData) {
-    // try { /** redirect is not working under try-catch*/
+    try { /** redirect is not working under try-catch*/
         const { customerId, amount, status } = CreateInvoice.parse({
             customerId: formData.get('customerId'),
             amount: formData.get('amount'),
@@ -25,25 +25,30 @@ export async function createInvoice(formData: FormData) {
         const amountInCents = amount * 100;
         const created = new Date().toISOString().split('T')[0];
         await insertInvoice({ customerId, amountInCents, status, created })
-
-        revalidatePath('/dashboard/invoices')
-        redirect('/dashboard/invoices')
-    /*} catch (err) {
-        console.error('Error during addin the invoice:', err);
+    } catch (err) {
+        console.error('Error during creating invoice:', err);
         throw new Error('Check data submitted for the invoice');
-    }*/
+    }
+    // redirect works by throwing an error. To avoid this, you can call redirect after try/catch
+    revalidatePath('/dashboard/invoices')
+    redirect('/dashboard/invoices')
 }
 
 export async function upToDateInvoice(id: string, formData: FormData) {
-    const { customerId, amount, status } = UpdateInvoice.parse({
-        customerId: formData.get('customerId'),
-        amount: formData.get('amount'),
-        status: formData.get('status'),
-        id,
-    });
-    const amountInCents = amount * 100;
-
-    await updateInvoice({id, customerId, amountInCents, status})
+    try {
+        const { customerId, amount, status } = UpdateInvoice.parse({
+            customerId: formData.get('customerId'),
+            amount: formData.get('amount'),
+            status: formData.get('status'),
+            id,
+        });
+        const amountInCents = amount * 100;
+    
+        await updateInvoice({id, customerId, amountInCents, status})
+    } catch (err) {
+        console.error('Error during updating invoice:', err);
+        throw new Error('Check data submitted for the invoice');
+    }
 
     revalidatePath('/dashboard/invoices')
     redirect('/dashboard/invoices')
