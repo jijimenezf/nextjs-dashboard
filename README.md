@@ -27,6 +27,16 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
+## Notes from Developer
+
+This project is not using the Postgress SDK provided by Vercel (@vercel/postgres). Instead, is working with standard 'pg' module using Pool configuration and a database provided by ElephantSQL
+(https://customer.elephantsql.com/)
+
+## Next Steps
+
+- Add Docker configuration for this project
+- Add unit tests
+
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
