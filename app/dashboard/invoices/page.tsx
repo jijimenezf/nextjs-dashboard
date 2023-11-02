@@ -10,8 +10,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: 'Invoices',
-    description: 'Results from Invoices data query'
-}
+};
 
 export default async function Page({ searchParams }: { searchParams?: { query?: string; page?: string; }}) {
     const query = searchParams?.query || ''
