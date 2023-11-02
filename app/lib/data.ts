@@ -181,9 +181,10 @@ export async function insertInvoice({
     try {
         await pool.query(`INSERT INTO invoices(customer_id, amount, status, date)
         VALUES ($1, $2, $3, $4)`, [customerId, amountInCents, status, created]);
+        return true;
     } catch (err) {
         console.error('Database Error:', err);
-        throw new Error('Failed to insert a new invoice.');
+        return false;
     }
 }
 
@@ -219,9 +220,10 @@ export async function updateInvoice({
         await pool.query(`UPDATE invoices
           SET customer_id = $1, amount = $2, status = $3
           WHERE id = $4`, [customerId, amountInCents, status, id])
+          return true;
     } catch (err) {
         console.error('Database Error:', err);
-        throw new Error('Failed to update the selected invoice.');
+        return false;
     }
 }
 

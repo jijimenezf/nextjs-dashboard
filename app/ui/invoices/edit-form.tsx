@@ -10,7 +10,7 @@ import {
 import Link from 'next/link';
 import { Button } from '../button';
 import { upToDateInvoice } from '@/app/lib/actions';
-// import { useFormState } from 'react-dom';
+import { useFormState } from 'react-dom';
 
 export default function EditInvoiceForm({
   invoice,
@@ -20,12 +20,11 @@ export default function EditInvoiceForm({
   customers: CustomerField[];
 }) {
   const initialState = { message: null, errors: {} };
-  // const [state, dispatch] = useFormState(updateInvoice, initialState);
-  const updateInvoicesWithId = upToDateInvoice.bind(null, invoice.id)
+  const updateInvoiceWithId = upToDateInvoice.bind(null, invoice.id);
+  const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
 
   return (
-    <form action={updateInvoicesWithId}>
-      {/** <form action={dispatch}> */}
+    <form action={dispatch}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Invoice ID */}
         <input type="hidden" name="id" value={invoice.id} />
@@ -54,7 +53,7 @@ export default function EditInvoiceForm({
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
 
-          {/* state.errors?.customerId ? (
+          {state.errors?.customerId ? (
             <div
               id="customer-error"
               aria-live="polite"
@@ -64,7 +63,7 @@ export default function EditInvoiceForm({
                 <p key={error}>{error}</p>
               ))}
             </div>
-              ) : null */}
+              ) : null}
         </div>
 
         {/* Invoice Amount */}
@@ -87,7 +86,7 @@ export default function EditInvoiceForm({
             </div>
           </div>
 
-          {/* state.errors?.amount ? (
+          {state.errors?.amount ? (
             <div
               id="amount-error"
               aria-live="polite"
@@ -97,7 +96,7 @@ export default function EditInvoiceForm({
                 <p key={error}>{error}</p>
               ))}
             </div>
-              ) : null */}
+              ) : null}
         </div>
 
         {/* Invoice Status */}
@@ -141,7 +140,7 @@ export default function EditInvoiceForm({
               </div>
             </div>
           </div>
-          {/* state.errors?.status ? (
+          {state.errors?.status ? (
             <div
               aria-describedby="status-error"
               aria-live="polite"
@@ -151,14 +150,14 @@ export default function EditInvoiceForm({
                 <p key={error}>{error}</p>
               ))}
             </div>
-              ) : null */}
+              ) : null}
         </div>
 
-        {/*state.message ? (
+        {state.message ? (
           <div aria-live="polite" className="my-2 text-sm text-red-500">
             <p>{state.message}</p>
           </div>
-        ) : null*/}
+        ) : null}
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link

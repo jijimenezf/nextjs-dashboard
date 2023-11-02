@@ -6,7 +6,7 @@ export default function NotFound() {
         <main className="flex h-full flex-col items-center justify-center gap-2">
             <FaceFrownIcon className="w-10 text-gray-400"/>
             <h2 className="text-xl font-semibold">That page could not be found</h2>
-            <p>We sorry, but we can't find that invoice</p>
+            <p>We sorry, but we can&apos;t find that invoice</p>
             <Link
               href="/dashboard/invoices"
               className="mt-4 rounded-md bg-blue-400 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-400"
