@@ -251,3 +251,49 @@ export async function getUser(email: string) {
         throw new Error('Failed to fetch user.');
     }
 }
+
+export async function fetchCustomerPagination() {
+    noStore()
+
+    try {
+        const { rows } = await pool.query(`
+        SELECT COUNT(*)
+        FROM customers`)
+        const totalPages = Math.ceil(Number(rows[0].count) / ITEMS_PER_PAGE)
+        return totalPages
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch total number of customers.');
+    }
+}
+
+export async function getCustomerData(currentPage: number) {
+    noStore()
+
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE
+    try {
+        const { rows }: QueryResult<CustomersTable> = await pool.query(`
+        SELECT
+          customers.id,
+          customers.name,
+          customers.email,
+          customers.image_url,
+          SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "total_paid",
+          SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "total_pending"
+        FROM customers, invoices
+        WHERE invoices.customer_id = customers.id
+        GROUP BY customers.id
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}`)
+
+        const customers = rows.map((customerList) => ({
+            ...customerList,
+            total_invoices: Number(customerList.total_paid) - Number(customerList.total_pending),
+        }))
+
+        return customers;
+
+    } catch (error) {
+        console.error('Failed to get customer data:', error);
+        throw new Error('Failed to get customer data.');
+    }
+}
